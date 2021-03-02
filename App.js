@@ -8,6 +8,8 @@ import TrackListScreen from "./src/screens/TrackListScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Provider as AuthProvider } from "./src/context/AuthContext";
+import { setNavigator } from "./src/NavigatorRef";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,14 +26,24 @@ export default class App extends React.Component {
   };
   render() {
     return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="SignIn" component={SigninScreen} />
-          <Stack.Screen name="SignUp" component={SignupScreen} />
-          <Stack.Screen name="TrackList" component={this.tabNavigation} />
-          <Stack.Screen name="TrackDetail" component={TrackDetailScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AuthProvider>
+        <NavigationContainer ref={navigator => { setNavigator(navigator); }}>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="SignUp"
+              component={SignupScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="SignIn" component={SigninScreen} />
+            <Stack.Screen
+              name="TrackList"
+              component={this.tabNavigation}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="TrackDetail" component={TrackDetailScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthProvider>
     );
   }
 }
